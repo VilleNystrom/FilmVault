@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kirjaudu – MovieManager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="auth-wrap">
+    <a class="brand auth-brand" th:href="@{/elokuvat}">🎬 MovieManager</a>
+    <section class="panel auth-panel">
+        <h1>Kirjaudu sisään</h1>
+        <p class="muted">Kirjautuminen vaaditaan ylläpitoon.</p>
+        <div class="alert error" th:if="${param.error}">Virheellinen käyttäjätunnus tai salasana.</div>
+        <div class="alert success" th:if="${param.logout}">Olet kirjautunut ulos.</div>
+        <form th:action="@{/login}" method="post" class="stack-form">
+            <label for="username">Käyttäjätunnus</label>
+            <input id="username" name="username" type="text" autocomplete="username" required autofocus>
+            <label for="password">Salasana</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+            <button class="button primary" type="submit">Kirjaudu</button>
+        </form>
+        <p class="hint">Testitunnus: admin / admin123</p>
+        <a th:href="@{/elokuvat}" class="text-link">← Takaisin elokuviin</a>
+    </section>
+</div>
+</body>
+</html>
