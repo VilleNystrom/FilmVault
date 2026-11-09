@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta nimi="viewport" content="width=device-width, initial-scale=1">
+    <nimi th:text="${elokuva.nimi} + ' – MovieManager'">Elokuvan tiedot</nimi>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" th:href="@{/elokuvat}">🎬 MovieManager</a>
+    <nav>
+        <a th:href="@{/elokuvat}">Elokuvat</a>
+        <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Ylläpito</a>
+        <a th:href="@{/login}" sec:authorize="!isAuthenticated()">Kirjaudu</a>
+        <form th:action="@{/logout}" method="post" class="inline-form" sec:authorize="isAuthenticated()">
+            <button class="nav-button" type="submit">Kirjaudu ulos</button>
+        </form>
+    </nav>
+</header>
+<main class="container detail-container">
+    <a class="text-link" th:href="@{/elokuvat}">← Takaisin elokuviin</a>
+    <section class="detail-panel">
+        <div class="detail-poster">🎬</div>
+        <div class="detail-content">
+            <span class="lajityyppi-tag" th:text="${elokuva.lajityyppi.nimi}">Lajityyppi</span>
+            <h1 th:text="${elokuva.nimi}">Elokuvan nimi</h1>
+            <p class="detail-vuosi" th:text="${elokuva.julkaisuvuosi}">2024</p>
+            <dl>
+                <dt>Ohjaaja</dt><dd th:text="${elokuva.ohjaaja}">Ohjaaja</dd>
+                <dt>Lajityyppi</dt><dd th:text="${elokuva.lajityyppi.nimi}">Lajityyppi</dd>
+            </dl>
+            <h3>Elokuvan kuvaus</h3>
+            <p class="kuvaus" th:text="${elokuva.kuvaus != null and !elokuva.kuvaus.isBlank() ? elokuva.kuvaus : 'Kuvausta ei ole lisätty.'}"></p>
+            <a class="button primary" sec:authorize="hasRole('ADMIN')"
+               th:href="@{/admin/elokuvat/{tunnus}/edit(tunnus=${elokuva.tunnus})}">Muokkaa elokuvaa</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>

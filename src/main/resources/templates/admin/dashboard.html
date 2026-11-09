@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta nimi="viewport" content="width=device-width, initial-scale=1">
+    <nimi>Ylläpito – MovieManager</nimi>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" th:href="@{/elokuvat}">🎬 MovieManager</a>
+    <nav>
+        <a th:href="@{/elokuvat}">Julkinen näkymä</a>
+        <a class="active" th:href="@{/admin}">Ylläpito</a>
+        <form th:action="@{/logout}" method="post" class="inline-form">
+            <button class="nav-button" type="submit">Kirjaudu ulos</button>
+        </form>
+    </nav>
+</header>
+<main class="container admin-container">
+    <div class="admin-heading">
+        <div><p class="eyebrow">HALLINTA</p><h1>Elokuvakirjasto</h1>
+            <p class="muted">Lisää, muokkaa tai poista kokoelman elokuvia.</p></div>
+        <a class="button primary" th:href="@{/admin/elokuvat/new}">＋ Lisää elokuva</a>
+    </div>
+    <div class="alert success" th:if="${onnistumisViesti}" th:text="${onnistumisViesti}"></div>
+    <div class="table-wrap">
+        <table>
+            <thead><tr><th>Elokuva</th><th>Vuosi</th><th>Ohjaaja</th><th>Lajityyppi</th><th>Toiminnot</th></tr></thead>
+            <tbody>
+            <tr th:each="elokuva : ${elokuvat}">
+                <td><strong th:text="${elokuva.nimi}">Nimi</strong></td>
+                <td th:text="${elokuva.julkaisuvuosi}">2024</td>
+                <td th:text="${elokuva.ohjaaja}">Ohjaaja</td>
+                <td><span class="lajityyppi-tag" th:text="${elokuva.lajityyppi.nimi}">Lajityyppi</span></td>
+                <td class="actions">
+                    <a class="small-button" th:href="@{/admin/elokuvat/{tunnus}/edit(tunnus=${elokuva.tunnus})}">Muokkaa</a>
+                    <form th:action="@{/admin/elokuvat/{tunnus}/poista(tunnus=${elokuva.tunnus})}" method="post"
+                          onsubmit="return confirm('Haluatko varmasti poistaa elokuvan?');">
+                        <button class="small-button danger" type="submit">Poista</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(elokuvat)}"><td colspan="5">Elokuvia ei vielä ole.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>

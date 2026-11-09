@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta nimi="viewport" content="width=device-width, initial-scale=1">
+    <nimi>Elokuvat – MovieManager</nimi>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" th:href="@{/elokuvat}">🎬 MovieManager</a>
+    <nav>
+        <a class="active" th:href="@{/elokuvat}">Elokuvat</a>
+        <a th:href="@{/admin}" sec:authorize="hasRole('ADMIN')">Ylläpito</a>
+        <a th:href="@{/login}" sec:authorize="!isAuthenticated()">Kirjaudu</a>
+        <form th:action="@{/logout}" method="post" class="inline-form" sec:authorize="isAuthenticated()">
+            <button class="nav-button" type="submit">Kirjaudu ulos</button>
+        </form>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="hero">
+        <p class="eyebrow">OMA ELOKUVAKIRJASTO</p>
+        <h1>Löydä seuraava<br><span>suosikkielokuvasi.</span></h1>
+        <p class="hero-copy">Selaa kokoelmaa, etsi elokuvia ja tutustu niiden taustoihin.</p>
+    </section>
+
+    <form class="filter-bar" th:action="@{/elokuvat}" method="get">
+        <input type="hae" nimi="q" placeholder="Hae nimellä tai ohjaajalla..." th:value="${q}">
+        <select nimi="lajityyppiTunnus">
+            <option value="">Kaikki genret</option>
+            <option th:each="lajityyppi : ${lajityypit}" th:value="${lajityyppi.tunnus}"
+                    th:text="${lajityyppi.nimi}" th:selected="${valittuLajityyppi == lajityyppi.tunnus}"></option>
+        </select>
+        <button class="button primary" type="submit">Hae</button>
+        <a class="button secondary" th:href="@{/elokuvat}">Tyhjennä</a>
+    </form>
+
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">KOKOELMA</p>
+            <h2>Elokuvat</h2>
+        </div>
+        <span class="count" th:text="${elokuvat.size()} + ' elokuvaa'">0 elokuvaa</span>
+    </div>
+
+    <div class="empty-state" th:if="${#lists.isEmpty(elokuvat)}">
+        <h3>Elokuvia ei löytynyt</h3>
+        <p>Kokeile toista hakusanaa tai poista genrerajaus.</p>
+    </div>
+
+    <div class="elokuva-grid" th:unless="${#lists.isEmpty(elokuvat)}">
+        <article class="elokuva-card" th:each="elokuva : ${elokuvat}">
+            <div class="poster-placeholder"><span>🎞</span></div>
+            <div class="elokuva-card-content">
+                <span class="lajityyppi-tag" th:text="${elokuva.lajityyppi.nimi}">Lajityyppi</span>
+                <h3 th:text="${elokuva.nimi}">Elokuvan nimi</h3>
+                <p class="elokuva-meta"><span th:text="${elokuva.julkaisuvuosi}">2024</span> ·
+                    <span th:text="${elokuva.ohjaaja}">Ohjaaja</span></p>
+                <p class="card-kuvaus" th:text="${elokuva.kuvaus}">Kuvaus</p>
+                <a class="text-link" th:href="@{/elokuvat/{tunnus}(tunnus=${elokuva.tunnus})}">Katso tiedot →</a>
+            </div>
+        </article>
+    </div>
+</main>
+<footer class="footer">MovieManager · Elokuvien hallintasovellus</footer>
+</body>
+</html>

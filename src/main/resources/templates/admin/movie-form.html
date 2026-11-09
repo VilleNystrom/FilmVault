@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta nimi="viewport" content="width=device-width, initial-scale=1">
+    <nimi>Elokuvan tiedot – MovieManager</nimi>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="site-header">
+    <a class="brand" th:href="@{/elokuvat}">🎬 MovieManager</a>
+    <nav><a th:href="@{/elokuvat}">Julkinen näkymä</a><a th:href="@{/admin}">Ylläpito</a></nav>
+</header>
+<main class="container form-container">
+    <a class="text-link" th:href="@{/admin}">← Takaisin ylläpitoon</a>
+    <section class="panel form-panel">
+        <p class="eyebrow">ELOKUVAKIRJASTO</p>
+        <h1 th:text="${elokuva.tunnus == null ? 'Lisää elokuva' : 'Muokkaa elokuvaa'}">Elokuva</h1>
+        <form th:action="@{/admin/elokuvat/tallenna}" th:object="${elokuva}" method="post" class="stack-form">
+            <input type="hidden" th:field="*{tunnus}">
+            <label for="nimi">Elokuvan nimi</label>
+            <input tunnus="nimi" type="text" th:field="*{nimi}" maxlength="120" required>
+            <small class="field-error" th:if="${#fields.hasErrors('nimi')}" th:errors="*{nimi}"></small>
+
+            <label for="julkaisuvuosi">Julkaisuvuosi</label>
+            <input tunnus="julkaisuvuosi" type="number" th:field="*{julkaisuvuosi}" min="1888" max="2100" required>
+            <small class="field-error" th:if="${#fields.hasErrors('julkaisuvuosi')}" th:errors="*{julkaisuvuosi}"></small>
+
+            <label for="ohjaaja">Ohjaaja</label>
+            <input tunnus="ohjaaja" type="text" th:field="*{ohjaaja}" maxlength="100" required>
+            <small class="field-error" th:if="${#fields.hasErrors('ohjaaja')}" th:errors="*{ohjaaja}"></small>
+
+            <label for="lajityyppiTunnus">Lajityyppi</label>
+            <select tunnus="lajityyppiTunnus" nimi="lajityyppiTunnus" required>
+                <option value="">Valitse lajityyppi</option>
+                <option th:each="lajityyppi : ${lajityypit}" th:value="${lajityyppi.tunnus}"
+                        th:text="${lajityyppi.nimi}" th:selected="${valittuLajityyppiTunnus == lajityyppi.tunnus or (elokuva.lajityyppi != null and elokuva.lajityyppi.tunnus == lajityyppi.tunnus)}"></option>
+            </select>
+            <small class="field-error" th:if="${#fields.hasErrors('lajityyppi')}" th:errors="*{lajityyppi}"></small>
+
+            <label for="kuvaus">Kuvaus</label>
+            <textarea tunnus="kuvaus" th:field="*{kuvaus}" rows="5" maxlength="2000"></textarea>
+            <small class="field-error" th:if="${#fields.hasErrors('kuvaus')}" th:errors="*{kuvaus}"></small>
+
+            <div class="form-actions">
+                <button class="button primary" type="submit">Tallenna</button>
+                <a class="button secondary" th:href="@{/admin}">Peruuta</a>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>
