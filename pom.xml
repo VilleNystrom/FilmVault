@@ -14,8 +14,8 @@
     <groupId>fi.moviemanager</groupId>
     <artifactId>moviemanager</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <nimi>MovieManager</nimi>
-    <kuvaus>Elokuvien hallintasovellus</kuvaus>
+    <name>FilmVault</name>
+    <description>Elokuvien hallintasovellus</description>
 
     <properties>
         <java.version>17</java.version>
